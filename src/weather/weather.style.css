@@ -1,0 +1,9 @@
+.btn-rounded-light {
+    border-color: lightgrey;
+    background-color: lightgrey;
+    border-radius: 100%;
+}
+
+.w-18rem {
+    width: 18rem;
+}
