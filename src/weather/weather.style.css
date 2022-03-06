@@ -10,7 +10,7 @@ form input:focus, button:focus {
     box-shadow: none !important;
 }
 
-.btn-rounded-light {
+.btn-rounded-light, .btn-rounded-light:focus {
     border-color: lightgrey;
     background-color: lightgrey;
     border-radius: 100%;
