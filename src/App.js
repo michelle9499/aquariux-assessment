@@ -19,10 +19,21 @@ class App extends React.Component {
       tempMax: undefined,
       humidity: undefined,
       time: '',
+      icon: undefined,
       recent: [],
       error: false,
       errorMessage: ''
     };
+
+    this.weatherIcon = {
+      Thunderstorm: 'thunderstorm',
+      Drizzle: 'sleet',
+      Rain: 'storm-showers',
+      Snow: 'snow',
+      Atmosphere: 'fog',
+      Clear: 'day-sunny',
+      Clouds: 'day-fog'
+    }
   }
 
   //calculate temperature in celcius
@@ -31,15 +42,44 @@ class App extends React.Component {
     return cell;
   }
 
+  //get weather icon
+  getWeatherIcon(icons, rangeId) {
+    switch (true) {
+      case rangeId >= 200 && rangeId <= 232:
+        this.setState({ icon: this.weatherIcon.Thunderstorm });
+        break;
+      case rangeId >= 300 && rangeId <= 321:
+        this.setState({ icon: this.weatherIcon.Drizzle });
+        break;
+      case rangeId >= 500 && rangeId <= 531:
+        this.setState({ icon: this.weatherIcon.Rain });
+        break;
+      case rangeId >= 600 && rangeId <= 622:
+        this.setState({ icon: this.weatherIcon.Snow });
+        break;
+      case rangeId >= 701 && rangeId <= 781:
+        this.setState({ icon: this.weatherIcon.Atmosphere });
+        break;
+      case rangeId === 800:
+        this.setState({ icon: this.weatherIcon.Clear });
+        break;
+      case rangeId >= 801 && rangeId <= 804:
+        this.setState({ icon: this.weatherIcon.Clouds });
+        break;
+      default:
+        this.setState({ icon: null });
+    }
+  }
+
   //get current location
   getPosition = () => {
-    return new Promise (function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
   }
 
   //get current weather with latitude and logitude
-  getWeatherWithLatLon = async(latitude, logitude) => {
+  getWeatherWithLatLon = async (latitude, logitude) => {
     const current_api_call = await fetch(`${WEATHER_URL}?lat=${latitude}&lon=${logitude}&appid=${API_KEY}`);
     const response = await current_api_call.json();
 
@@ -48,11 +88,13 @@ class App extends React.Component {
       country: response.sys.country,
       main: response.weather[0].main,
       description: response.weather[0].description,
-      tempMin: response.main.temp_min,
-      tempMax: response.main.temp_max,
+      tempMin: this.calCelcius(response.main.temp_min),
+      tempMax: this.calCelcius(response.main.temp_max),
       humidity: response.main.humidity,
-      time: moment(response.dt*1000).format('YYYY-MM-DD h:mm a')
+      time: moment(response.dt * 1000).format('YYYY-MM-DD h:mm a')
     })
+
+    this.getWeatherIcon(this.weatherIcon, response.weather[0].id)
   }
 
   //get weather with city and country
@@ -81,9 +123,11 @@ class App extends React.Component {
         time: moment(response.dt * 1000).format('YYYY-MM-DD h:mm a'),
         error: false
       },
-      () => {
-        this.addDataToRecent();
-      });
+        () => {
+          this.addDataToRecent();
+        });
+
+      this.getWeatherIcon(this.weatherIcon, response.weather[0].id)
     } else {
       this.setState({ error: true, errorMessage: 'Please Enter City and Country' })
     }
@@ -120,12 +164,12 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getPosition()
-    .then((position) => {
-      this.getWeatherWithLatLon(position.coords.latitude, position.coords.longitude);
-    })
-    .catch((err) => {
-      this.setState({error: true})
-    });
+      .then((position) => {
+        this.getWeatherWithLatLon(position.coords.latitude, position.coords.longitude);
+      })
+      .catch((err) => {
+        this.setState({ error: true })
+      });
 
     const data = localStorage.getItem('recent')
 
@@ -149,6 +193,7 @@ class App extends React.Component {
         tempMax={this.state.tempMax}
         humidity={this.state.humidity}
         time={this.state.time}
+        icon={this.state.icon}
         recent={this.state.recent}
       />
     )

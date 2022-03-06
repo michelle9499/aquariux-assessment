@@ -1,3 +1,7 @@
+body{
+    background-color: #fff6e6;
+}
+
 td {
     vertical-align:middle;
 }
@@ -12,9 +16,41 @@ form input:focus, button:focus {
     border-radius: 100%;
 }
 
-.w-18rem {
-    width: 18rem;
+.btn-rounded-light:hover {
+    border-color: #FFC107;
+    background-color: #FFC107;
+    border-radius: 100%;
 }
+
+.w-28rem {
+    width: 28rem;
+}
+
+/* background color for weather */
+/* drizzle, snow */
+.wbg-sleet, .wbg-snow {
+    background: rgb(128,133,142);
+    background: linear-gradient(0deg, rgba(128,133,142,1) 0%, rgba(160,167,171,1) 22%, rgba(200,209,214,1) 100%);
+}
+
+/* atmostphere */
+.wbg-fog {
+    background: rgb(93,95,145);
+    background: linear-gradient(0deg, rgba(93,95,145,1) 0%, rgba(138,119,169,1) 22%, rgba(185,140,184,1) 100%);
+}
+
+/* clear */
+.wbg-day-sunny {
+    background: rgb(84,166,220);
+    background: linear-gradient(0deg, rgba(84,166,220,1) 0%, rgba(169,215,244,1) 100%, rgba(169,215,244,1) 100%);
+}
+
+/* clouds, thunderstorm, rain */
+.wbg-day-fog, .wbg-thunderstorm, .wbg-storm-showers {
+    background: rgb(144,166,187);
+    background: linear-gradient(0deg, rgba(144,166,187,0.8603816526610644) 0%, rgba(154,183,198,1) 37%, rgba(86,149,179,1) 100%);
+}
+/* end background color for weather */
 
 @media screen and (max-width: 768px) {
     .mb-sm-2 {
